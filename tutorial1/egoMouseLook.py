@@ -5,6 +5,8 @@ import shelve
 
 import pdb
 
+import os
+
 import cellular
 # reload(cellular)  # Python 2
 importlib.reload(cellular)
@@ -132,7 +134,10 @@ mouse = Mouse()
 cat = Cat()
 cheese = Cheese()
 
-world = cellular.World(Cell, directions=directions, filename='../worlds/waco.txt')
+##
+print(f"Attempting to open file: {os.path.abspath('./worlds/waco.txt')}")
+
+world = cellular.World(Cell, directions=directions, filename='./worlds/waco.txt')
 world.age = 0
 
 world.addAgent(cheese, cell=pickRandomLocation())
