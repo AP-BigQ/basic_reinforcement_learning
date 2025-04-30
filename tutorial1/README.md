@@ -3,6 +3,14 @@
 - Make sure pygame is installed in virtual environment.
 - Maybe file relative path correction is needed for worlds/waco.txt.
 
+- Background folder include ipynb file for basic Q-learning code
+- Ensure to install ipykernel kernel
+
+```
+pip install ipykernel
+
+```
+
 ```
 cd basic_reinforcement_learning
 python3 tutorial1/egoMouseLook.py >> /dev/null
