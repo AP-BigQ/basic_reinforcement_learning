@@ -1,3 +1,28 @@
+- In VSCode, make sure Python extension is installed. 
+- Ctrl + Shift + P to activate .venv in VSCode and make sure (.venv) appears in the terminal.
+- Make sure pygame is installed in virtual environment.
+- Maybe file relative path correction is needed for worlds/waco.txt.
+
+- Background folder include ipynb file for basic Q-learning code
+- Ensure to install ipykernel kernel
+
+```
+pip install ipykernel
+
+```
+
+```
+cd basic_reinforcement_learning
+python3 tutorial1/egoMouseLook.py >> /dev/null
+
+```
+
+
+===============================================================================
+
+**The above was added in BigQ_Branch**
+===================================================
+
 Basic Reinforcement Learning Tutorial 1: Q-learning
 ===================================================
 

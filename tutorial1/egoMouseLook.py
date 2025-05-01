@@ -5,6 +5,8 @@ import shelve
 
 import pdb
 
+import os
+
 import cellular
 # reload(cellular)  # Python 2
 importlib.reload(cellular)
@@ -131,6 +133,9 @@ class Mouse(cellular.Agent):
 mouse = Mouse()
 cat = Cat()
 cheese = Cheese()
+
+##
+print(f"Attempting to open file: {os.path.abspath('./worlds/waco.txt')}")
 
 world = cellular.World(Cell, directions=directions, filename='./worlds/waco.txt')
 world.age = 0
