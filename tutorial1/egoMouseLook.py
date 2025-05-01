@@ -132,7 +132,7 @@ mouse = Mouse()
 cat = Cat()
 cheese = Cheese()
 
-world = cellular.World(Cell, directions=directions, filename='../worlds/waco.txt')
+world = cellular.World(Cell, directions=directions, filename='./worlds/waco.txt')
 world.age = 0
 
 world.addAgent(cheese, cell=pickRandomLocation())
