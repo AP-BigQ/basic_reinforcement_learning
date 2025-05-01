@@ -99,7 +99,9 @@ class World:
         self.display = makeDisplay(self)
         self.directions = directions
         if filename is not None:
-            data = file(filename).readlines()
+            #data = file(filename).readlines()
+            with open(filename, 'r') as f:
+                data = f.readlines()
             if height is None:
                 height = len(data)
             if width is None:
@@ -148,7 +150,9 @@ class World:
         if not hasattr(self.Cell, 'save'):
             return
         if isinstance(f, type('')):
-            f = file(f, 'w')
+            #f = file(f, 'w')
+            with open(f, 'w') as f:
+                f = f
 
         total = ''
         for j in range(self.height):
@@ -166,8 +170,10 @@ class World:
         if not hasattr(self.Cell, 'load'):
             return
         if isinstance(f, type('')):
-            f = file(f)
-        lines = f.readlines()
+            #f = file(f)
+            with open(f, 'r') as f:
+                lines = f.readlines()
+        #lines = f.readlines()
         lines = [x.rstrip() for x in lines]
         fh = len(lines)
         fw = max([len(x) for x in lines])
@@ -175,12 +181,12 @@ class World:
             fh = self.height
             starty = 0
         else:
-            starty = (self.height - fh) / 2
+            starty = (self.height - fh) // 2
         if fw > self.width:
             fw = self.width
             startx = 0
         else:
-            startx = (self.width - fw) / 2
+            startx = (self.width - fw) // 2
 
         self.reset()
         for j in range(fh):
@@ -512,7 +518,7 @@ class PygameDisplay:
                     try:
                         self.screen.fill(c, (sx, sy, self.size, self.size))
                     except TypeError:
-                        print 'Error: invalid colour:', c
+                        print('Error: invalid colour:', c)
                 sx += self.size
             odd = not odd
             sy += self.size

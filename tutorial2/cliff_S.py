@@ -82,10 +82,10 @@ cliffReward = -100
 goalReward = 50
 
 directions = 4
-world = cellular.World(Cell, directions=directions, filename='../worlds/cliff.txt')
+world = cellular.World(Cell, directions=directions, filename='./worlds/cliff.txt')
 
 if startCell is None:
-    print "You must indicate where the agent starts by putting a 'S' in the map file"
+    print("You must indicate where the agent starts by putting a 'S' in the map file")
     sys.exit()
 agent = Agent()
 world.addAgent(agent, cell=startCell)
@@ -93,7 +93,7 @@ world.addAgent(agent, cell=startCell)
 pretraining = 100000
 for i in range(pretraining):
     if i % 1000 == 0:
-        print i, agent.score, agent.deads
+        print(i, agent.score, agent.deads)
         agent.score = 0
         agent.deads = 0
     world.update()
