@@ -390,12 +390,13 @@ class TkinterDisplay:
         if hexgrid:
             iw += self.size / 2
 
-        f = file('temp.ppm', 'wb')
+        #f = file('temp.ppm', 'wb')
+        f = open('temp.ppm', 'wb')
         f.write('P6\n%d %d\n255\n' % (iw, ih))
 
         odd = False
         for row in self.world.grid:
-            line = cStringIO.StringIO()
+            line = io.StringIO()
             if hexgrid and odd:
                 line.write(self.getBackground() * (self.size / 2))
             for cell in row:
@@ -633,8 +634,8 @@ try:
     Display = PygameDisplay
 except:
     try:
-        import Tkinter
-        import cStringIO
+        import tkinter as Tkinter
+        import io 
         Display = TkinterDisplay
     except:
         Display = DummyDisplay
