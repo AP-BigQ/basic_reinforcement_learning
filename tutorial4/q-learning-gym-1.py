@@ -7,10 +7,11 @@ Inspired by https://gym.openai.com/evaluations/eval_kWknKOkPQ7izrixdhriurA
 
         @author: Victor Mayoral Vilches <victor@erlerobotics.com>
 '''
-import gym
+import gymnasium as gym
 import numpy
 import random
 import pandas
+from functools import reduce
 
 class QLearn:
     def __init__(self, actions, epsilon, alpha, gamma):
@@ -69,14 +70,16 @@ def to_bin(value, bins):
     return numpy.digitize(x=[value], bins=bins)[0]
 
 if __name__ == '__main__':
-    env = gym.make('CartPole-v0')
+    #env = gym.make('CartPole-v1') 
+    env = gym.make('CartPole-v1', render_mode='rgb_array') ## switch to CartPole-v1 
 
     # DEPRECATED as of 12/23/2016
     # env.monitor.start('/tmp/cartpole-experiment-1', force=True)
     #    # video_callable=lambda count: count % 10 == 0)
     
-    env = gym.wrappers.Monitor(env, '/tmp/cartpole-experiment-1', force=True)
+    #env = gym.wrappers.Monitor(env, '/tmp/cartpole-experiment-1', force=True)
         # video_callable=lambda count: count % 10 == 0)
+    env = gym.wrappers.RecordVideo(env, '/tmp/cartpole-experiment-1', episode_trigger=lambda count: count % 10 == 0)
 
     goal_average_steps = 195
     max_number_of_steps = 200
@@ -98,8 +101,8 @@ if __name__ == '__main__':
     qlearn = QLearn(actions=range(env.action_space.n),
                     alpha=0.5, gamma=0.90, epsilon=0.1)
 
-    for i_episode in xrange(3000):
-        observation = env.reset()
+    for i_episode in range(3000):
+        observation, info = env.reset()
 
         cart_position, pole_angle, cart_velocity, angle_rate_of_change = observation
         state = build_state([to_bin(cart_position, cart_position_bins),
@@ -107,13 +110,13 @@ if __name__ == '__main__':
                          to_bin(cart_velocity, cart_velocity_bins),
                          to_bin(angle_rate_of_change, angle_rate_bins)])
 
-        for t in xrange(max_number_of_steps):
+        for t in range(max_number_of_steps):
             # env.render()
 
             # Pick an action based on the current state
             action = qlearn.chooseAction(state)
             # Execute the action and get feedback
-            observation, reward, done, info = env.step(action)
+            observation, reward, terminated, truncated, info = env.step(action)
 
             # Digitize the observation to get a state
             cart_position, pole_angle, cart_velocity, angle_rate_of_change = observation
@@ -129,6 +132,8 @@ if __name__ == '__main__':
             #     print("Out of bounds, reseting")
             #     break
 
+            done = terminated or truncated # Combine terminated and truncated for episode end
+
             if not(done):
                 qlearn.learn(state, action, reward, nextState)
                 state = nextState
@@ -141,8 +146,15 @@ if __name__ == '__main__':
 
     l = last_time_steps.tolist()
     l.sort()
-    print("Overall score: {:0.2f}".format(last_time_steps.mean()))
-    print("Best 100 score: {:0.2f}".format(reduce(lambda x, y: x + y, l[-100:]) / len(l[-100:])))
+    if last_time_steps.size > 0:
+            print(f"Episode {i_episode + 1} - Steps: {last_time_steps[-1]}")
+            print("Overall score: {:0.2f}".format(last_time_steps.mean()))
+            if len(l) >= 100:
+                print("Best 100 score: {:0.2f}".format(reduce(lambda x, y: x + y, l[-100:]) / len(l[-100:])))
 
-    env.monitor.close()
+    #print("Overall score: {:0.2f}".format(last_time_steps.mean()))
+    #print("Best 100 score: {:0.2f}".format(reduce(lambda x, y: x + y, l[-100:]) / len(l[-100:])))
+
+    #env.monitor.close()
+    env.close()
     # gym.upload('/tmp/cartpole-experiment-1', algorithm_id='vmayoral simple Q-learning', api_key='your-key')
