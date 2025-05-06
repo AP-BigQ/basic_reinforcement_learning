@@ -150,7 +150,9 @@ class World:
         if not hasattr(self.Cell, 'save'):
             return
         if isinstance(f, type('')):
-            f = file(f, 'w')
+            #f = file(f, 'w')
+            with open(f, 'w') as f:
+                f = f
 
         total = ''
         for j in range(self.height):
@@ -168,7 +170,9 @@ class World:
         if not hasattr(self.Cell, 'load'):
             return
         if isinstance(f, type('')):
-            f = open(f)
+            #f = file(f, 'w')
+            with open(f, 'w') as f:
+                f = f
         lines = f.readlines()
         lines = [x.rstrip() for x in lines]
         fh = len(lines)
@@ -390,12 +394,13 @@ class TkinterDisplay:
         if hexgrid:
             iw += self.size / 2
 
-        f = file('temp.ppm', 'wb')
+        #f = file('temp.ppm', 'wb')
+        f = open('temp.ppm', 'wb')
         f.write('P6\n%d %d\n255\n' % (iw, ih))
 
         odd = False
         for row in self.world.grid:
-            line = cStringIO.StringIO()
+            line = io.StringIO()
             if hexgrid and odd:
                 line.write(self.getBackground() * (self.size / 2))
             for cell in row:
@@ -637,8 +642,8 @@ try:
     Display = PygameDisplay
 except:
     try:
-        import Tkinter
-        import cStringIO
+        import tkinter as Tkinter
+        import io
         Display = TkinterDisplay
     except:
         Display = DummyDisplay
